@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  fastapi-scraper:
+    build: .
+    ports:
+      - "3054:3054"
+    restart: always
