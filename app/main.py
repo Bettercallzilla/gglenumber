@@ -32,9 +32,9 @@ def scrape_single_url(url: str):
             browser.close()
             if phone:
                 return {"phone": phone, "business": business_name}
+            return {"phone": None, "business": business_name}
     except Exception as e:
         return {"error": str(e), "url": url}
-    return None
 
 class ScrapeRequest(BaseModel):
     links: Union[str, List[str]]
@@ -42,9 +42,9 @@ class ScrapeRequest(BaseModel):
 @app.post("/scrape")
 def scrape_links(request: ScrapeRequest):
     if isinstance(request.links, str):
-        urls = [url.strip() for url in request.links.split(",") if url.strip()]
+        urls = [url.strip() for url in request.links.split(",") if url.strip().startswith("http")]
     else:
-        urls = [url.strip() for url in request.links if url.strip()]
+        urls = [url.strip() for url in request.links if url.strip().startswith("http")]
     with Pool(processes=6) as pool:
         results = pool.map(scrape_single_url, urls)
     return [r for r in results if r]
