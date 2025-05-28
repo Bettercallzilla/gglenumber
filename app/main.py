@@ -20,7 +20,7 @@ def extract_phone(text):
 def scrape_single_url(url: str):
     try:
         with sync_playwright() as p:
-            browser = p.chromium.launch(headless=True)
+            browser = p.chromium.launch(headless=True, args=["--no-sandbox"])
             page = browser.new_page()
             page.goto(url, timeout=60000)
             page.wait_for_timeout(4000)
